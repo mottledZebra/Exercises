@@ -1,2 +1,3 @@
 # Exercises
-Exercises in various programming languages
+Упражнения по следующим языкам программирования:
+Python
