@@ -7,9 +7,13 @@
 # Each number is written in a separate line.
 
 print('Площадь прямоугольного треугольника')
+print()
 
-a = int(input('Первый катет = '))
-b = int(input('Второй катет = '))
+ans = 'y'
 
-s = a * b / 2
-print('Площадь = ' + str(s))
+while ans == 'y':
+    a = int(input('Первый катет = '))
+    b = int(input('Второй катет = '))
+    s = a * b / 2
+    print('Площадь = ' + str(s))
+    ans = input('Еще раз? y/n ')

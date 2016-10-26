@@ -5,11 +5,14 @@
 # Each number is written in a separate line.
 
 print('Сумма трех чисел')
+print()
 
-a = int(input('a = '))
-b = int(input('b = '))
-c = int(input('c = '))
+ans = 'y'
 
-sum = a + b + c
-print('Сумма = ' + str(sum))
-
+while ans == 'y':
+    a = int(input('a = '))
+    b = int(input('b = '))
+    c = int(input('c = '))
+    sum = a + b + c
+    print('Сумма = ' + str(sum))
+    ans = input('Еще раз? y/n ')
