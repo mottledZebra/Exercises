@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Градиент</title>
+	<style>
+		table {
+			border-collapse: collapse;
+			float: left;
+			margin-right: 25px;
+		}
+		td {
+			width: 25px;
+			height: 25px;
+			color: white;
+			font-family: sans-serif;
+			font-size: 8pt;
+			vertical-align: middle;
+		}
+		fieldset {
+			border: none;
+			float: left;
+			text-align: center;
+		}
+		input {	
+			width: 25px;
+			height: 25px;
+		}
+		.r {
+			background: red;
+		}
+		.g {
+			background: green;
+		}
+		.b {
+			background: blue;
+		}
+	</style>
+  </head>
+  
+  <body>
+	<table>
+	</table>
+	<fieldset>
+		<legend>цвет 1</legend>
+		<div class="r">
+			<input type="radio" name="first" value="r" checked></input><br>
+		</div>
+		<div class="g">
+			<input type="radio" name="first" value="g"></input><br>
+		</div>
+		<div class="b">
+			<input type="radio" name="first" value="b"></input>
+		</div>
+	</fieldset>
+	<fieldset>
+		<legend>цвет 2</legend>
+		<div class="r">
+			<input type="radio" name="second" value="r"></input><br>
+		</div>
+		<div class="g">
+			<input type="radio" name="second" value="g"></input><br>
+		</div>
+		<div class="b">
+			<input type="radio" name="second" value="b" checked></input>
+		</div>
+	</fieldset>
+	
+    <script type="text/javascript">
+		var firstShift;
+		var secondShift;
+		
+		window.onload = function () {
+			document.getElementsByName('first').forEach(function(firstRadio) {
+				if (firstRadio.checked == true) {
+					firstShift = radioValue(firstRadio);
+				}
+				
+				firstRadio.onclick = function() {
+					firstShift = radioValue(this);
+					gradient();
+				}
+			})			
+			document.getElementsByName('second').forEach(function(secondRadio) {
+				if (secondRadio.checked == true) {
+					secondShift = radioValue(secondRadio);
+				}
+				
+				secondRadio.onclick = function() {
+					secondShift = radioValue(this);
+					gradient();
+				}
+			})
+			gradient();
+		}
+
+		function radioValue(radio) {
+			if (radio.value == 'r') {
+				return 0x10000;
+			}
+			else if (radio.value == 'g') {
+				return 0x100;
+			}
+			else {
+				return 0x1;
+			}
+		}
+		
+		function gradient() {
+			var table = document.getElementsByTagName('table')[0];
+			var cellColor;
+			var colorToString;
+			
+			table.innerHTML = ''; //очищаем таблицу с градиентом
+			for(s = 0; s <= 0xFF; s += 0xF) {
+				var tr = document.createElement("tr");
+				table.appendChild(tr);
+				for (f = 0xFF; f >= 0; f -= 0xF) {
+					/*при выборе одинаковых цветов, в градиенте будет переход темный-светлый*/
+					if (firstShift == secondShift) {
+						var firstColor;
+						var secondColor;
+						/*для симметрии градиента максимальное значение цвета будет первым*/
+						if (f > s) { 
+							firstColor = f;
+							secondColor = s;
+						}
+						else {
+							firstColor = s;
+							secondColor = f;
+						}
+						cellColor = firstColor * firstShift;
+						/*добавляем светотень*/
+						if (firstShift == 0x10000) {
+							cellColor += secondColor * 0x100 + secondColor;
+						}
+						else if (firstShift == 0x100) {
+							cellColor += secondColor * 0x10000 + secondColor;
+						}
+						else {
+							cellColor += secondColor * 0x10000 + secondColor * 0x100;
+						}
+					}
+					/*если выбраны разные цвета, просто смешиваем их*/
+					else {
+						cellColor = f * firstShift + s * secondShift;
+					}
+					/*формируем текстовое шестнадцатеричное представление цвета*/
+					colorToString = '00000' + cellColor.toString(16);
+					var td = document.createElement("td");
+					td.style.backgroundColor = "#" + colorToString.substr(-6, 6);
+					tr.appendChild(td);				
+				}
+			}
+		}
+    </script>
+  </body>
+</html>

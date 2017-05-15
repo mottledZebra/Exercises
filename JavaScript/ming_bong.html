@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Минг Бонг</title>
+  </head>
+  <body>
+    <p id="message-health"></p>
+    <p id="question"></p>
+    <input type="text" id="input-change">
+    <button id="button">Далее</button>
+    <p id="message-result"></p>
+
+    <script type="text/javascript">
+    /**************************************
+    Мини игра "Минг Бонг".
+    Восстал монстр Минг Бонг! Храбрые борцы с монстрами спешат на помощь!
+    Изначально, Минг Бонг имеет 50 единиц здоровья.
+    Каждый ход игры Минг Бонг выпивает магическое зелье,
+    которые ему поставляет в неограниченном количестве злая колдунья Сардулья.
+    Оно восстанавливает ему некое количество здоровья (вводит пользователь).
+    Затем, борцы с монстрами поливают его из антимонстропушкаруса,
+    и это снимает ему некое количество здоровья (тоже вводит пользователь,
+    каждый раз заново на каждом ходу). Затем начинается новый ход.
+    Если в любой миг здоровье Минг Бонга превысит 100, то он поработит мир.
+    Если в любой миг здоровье Минг Бонга упадет ниже 0, то он умирает,
+    а Сардулья отправляется в тюрьму для злых колдуний.
+    После того, как игра закончилась с любым исходом, покажите статистику игры:
+    кто победил, сколько ходов на это потребовалось,
+    каков был максимальный нанесенный урон,
+    и какое максимальное количество здоровья было восстановлено,
+    а также зафиксированный минимум и максимум здоровья монстра.
+    Сделайте такой интерфейс: одна кнопка "Далее" и информация о здоровье.
+    Нажатие на кнопку "продолжает игру" (запрашивает данные).
+    Главная хитрость - как одна и та же кнопка запросит то здоровье, то урон.
+    ***************************************/
+    	var TEXT_HEALTH_ADD = 'получит';
+    	var TEXT_HEALTH_REMOVE = 'потеряет';
+    	var TEXT_RESULT_VICTORY = 'победил';
+    	var TEXT_RESULT_LOSE = 'проиграл';
+
+    	var health = maxHealth = minHealth = 50;
+    	var maxDamage = 0;
+    	var maxRecovery = 0;
+    	var addHealth = true;
+    	var steps = 0;
+
+    	showMessages(TEXT_HEALTH_ADD);
+
+    	document.getElementById('button').onclick = function () {
+    		var resultText;
+    		var change = document.getElementById('input-change').value;
+
+    		if (change && isFinite(change)) {
+    			change = Number(change);
+
+	    		if (maxHealth < health) {
+	    			maxHealth = health;
+	    		}
+	    		if (minHealth > health) {
+	    			minHealth = health;
+	    		}
+
+	    		if (addHealth) {
+	    			steps++;
+	    			health += change;
+	    			healthText = TEXT_HEALTH_REMOVE;
+	    			if (maxRecovery < change) {
+	    				maxRecovery = change;
+	    			}
+	    		}
+	    		else {
+	    			health -= change;
+	    			healthText = TEXT_HEALTH_ADD;
+	    			if (maxDamage < change) {
+	    				maxDamage = change;
+	    			}
+	    		}
+	    		addHealth = !addHealth;
+
+	    		if (health > 100) {
+	    			resultText = TEXT_RESULT_VICTORY;
+	    		}
+	    		else if (health < 0) {
+	    			resultText = TEXT_RESULT_LOSE;
+	    		}
+
+	    		showMessages(healthText, resultText);
+	    	}
+    	}
+
+    	function showMessages (healthText, resultText) {
+    		document.getElementById('message-health').innerHTML = 'У Минг Бонга '  + health + ' здоровья.';
+    		document.getElementById('question').innerHTML = 'Сколько здоровья он ' + healthText + '?';
+
+    		if (resultText) {
+	    		document.getElementById('message-result').innerHTML =
+	    			'Минг Бонг ' + resultText + '!' + '<br>'
+	    			+ 'На это потребовалось ' + steps + ' шагов' + '<br>'
+	    			+ 'Максимальный нанесенный урон: ' + maxDamage + '<br>'
+	    			+ 'Максимальное восстановление здоровья: ' + maxRecovery + '<br>'
+	    			+ 'Максимум здоровья: ' + maxHealth + '<br>'
+	    			+ 'Минимум здоровья: ' + minHealth + '<br>'
+	    		;
+	    		document.getElementById('question').setAttribute('style', 'display: none;');
+	    		document.getElementById('input-change').setAttribute('style', 'display: none;');
+	    		document.getElementById('button').setAttribute('style', 'display: none;');
+    		}
+    	}
+
+    </script>
+  </body>
+</html>

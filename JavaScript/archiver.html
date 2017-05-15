@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Архиватор</title>
+  </head>
+  <body>
+    <label for="input-binary">Введите двоичное число</label>
+    <input type="text" id="input-binary">
+    <button id="button">Далее</button>
+    <br><br>
+    <label for="string-filtered">Отфильтрованная строка</label>
+    <p id="string-filtered"></p>
+    <label for="result-archive">Результат архивирования</label>
+    <p id="result-archive"></p>
+    <label for="result-unarchive">Результат разархивирования</label>
+    <p id="result-unarchive"></p>
+
+    <script type="text/javascript">
+    /***********************************
+    Давайте составим архиватор для двоичных чисел.
+    Способ архивации: на вход функция принимает двоичное число
+    в виде строки из ноликов и единичек.
+    На выходе рядом стоящие нолики и единички склеиваются,
+    предваряясь количеством повторений. Например:
+    111110000110010 => результат 514021201110
+    Факультативно: сделайте разархиватор.
+    ***********************************/
+      document.getElementById('button').onclick = function () {
+        var inputString = document.getElementById('input-binary').value;
+        var filteredString = filterString(inputString, isBinary);
+        if (filteredString) {
+          document.getElementById('string-filtered').innerHTML = filteredString;
+          document.getElementById('result-archive').innerHTML = geekZip(filteredString);
+          document.getElementById('result-unarchive').innerHTML =
+            geekUnZip(document.getElementById('result-archive').innerHTML);
+        }
+        else {
+          alert('Во введенной строке нет двоичных чисел');
+        }
+      }
+
+      function geekZip(unArchiveString) {
+        var inputArray = unArchiveString.split('');
+        var archiveString = '';
+        var n = 1;
+        var previousItem = inputArray[0];
+        for (i = 1; i < inputArray.length; i++) {
+          if (previousItem === inputArray[i]) {
+            n++;
+            if (n > 9) {
+              alert('Идущих подряд одинаковых символов больше 9');
+              return;
+            }
+          }
+          else {
+            archiveString = archiveString.concat(n, previousItem);
+            n = 1;
+            previousItem = inputArray[i];
+          }
+        }
+        archiveString = archiveString.concat(n, previousItem);
+        return archiveString;
+      }
+
+      function geekUnZip(archiveString) {
+        var inputArray = archiveString.split('');
+        var unArchiveString = '';
+
+        for (i = 0; i < inputArray.length; i += 2) {
+          for (j = 0; j < inputArray[i]; j++) {
+            unArchiveString = unArchiveString.concat(inputArray[i + 1]);
+          }
+        }
+
+        return unArchiveString;
+      }
+
+      function filterString(inputString, filter) {
+        var inputArray = inputString.split('');
+        var filteredArray = inputArray.filter(filter);
+        if (filteredArray.length) {
+          return filteredArray.join('');
+        }
+        else {
+          return null;
+        }
+      }
+
+      function isBinary(item) {
+        return (isFinite(item) && (Number(item) === 1 || Number(item) === 0));
+      }
+
+    </script>
+  </body>
+</html>

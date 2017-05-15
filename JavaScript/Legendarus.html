@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Легендарус</title>
+</head>
+<body>
+<h1>Бои гладиаторов</h1>
+<label for="legendarus-power">Легендарус, начальная сила:</label>
+<input type="text" id="legendarus-power" value="0">
+<h2>Гладиаторы:</h2>
+<p>
+    <label style="width:100px;display:inline-block"></label>
+    <label>Сила:</label>
+    <input name="power1" type="text">
+    <label>Оружие:</label>
+    <input name="weapon1" type="text">
+</p>
+<p>
+    <label style="width:100px;display:inline-block"></label>
+    <label>Сила:</label>
+    <input name="power2" type="text">
+    <label>Оружие:</label>
+    <input name="weapon2" type="text">
+</p>
+<p>
+    <label style="width:100px;display:inline-block"></label>
+    <label>Сила:</label>
+    <input name="power3" type="text">
+    <label>Оружие:</label>
+    <input name="weapon3" type="text">
+</p>
+<p>
+    <label style="width:100px;display:inline-block"></label>
+    <label>Сила:</label>
+    <input name="power4" type="text">
+    <label>Оружие:</label>
+    <input name="weapon4" type="text">
+</p>
+<p>
+    <label style="width:100px;display:inline-block"></label>
+    <label>Сила:</label>
+    <input name="power5" type="text">
+    <label>Оружие:</label>
+    <input name="weapon5" type="text">
+</p>
+<p>
+    <label style="width:100px;display:inline-block"></label>
+    <label>Сила:</label>
+    <input name="power6" type="text">
+    <label>Оружие:</label>
+    <input name="weapon6" type="text">
+</p>
+<p>
+    <label style="width:100px;display:inline-block"></label>
+    <label>Сила:</label>
+    <input name="power7" type="text">
+    <label>Оружие:</label>
+    <input name="weapon7" type="text">
+</p>
+<p>
+    <label style="width:100px;display:inline-block"></label>
+    <label>Сила:</label>
+    <input name="power8" type="text">
+    <label>Оружие:</label>
+    <input name="weapon8" type="text">
+</p>
+<p>
+    <label style="width:100px;display:inline-block"></label>
+    <label>Сила:</label>
+    <input name="power9" type="text">
+    <label>Оружие:</label>
+    <input name="weapon9" type="text">
+</p>
+<p>
+    <label style="width:100px;display:inline-block"></label>
+    <label>Сила:</label>
+    <input name="power10" type="text">
+    <label>Оружие:</label>
+    <input name="weapon10" type="text">
+</p>
+<button id="start">В бой!</button>
+<p id="result"></p>
+
+<script type="text/javascript">
+/************************************
+Начинаем битву гладиаторов. Суть в следующем:
+Вы указываете в соответствующих полях начальную силу Легендаруса
+и параметры других гладиаторов. Неуказанные параметры считать равными нулю.
+Легендарус начинает битву с первым гладиатором.
+Битва происходит путем сравнения силы гладиатора и Легендаруса.
+В случае победы Легендарус забирает оружие поверженного гладиатора
+и прибавляет его к своей силе.
+После этого Легендарус приступает к схватке со вторым гладиатором.
+По кнопке "В бой" надо определить, победит ли Легендарус в битве или потерпит поражение.
+*************************************/
+  var MAX_POWER = 10;
+  var MAX_WEAPON = 10;
+  var COUNT_GLADIATORS = 10;
+
+  main();
+
+  function main() {
+    var gladiators = document.getElementsByTagName('p');
+    var gladiatorsPower = [];
+    var gladiatorsWeapon = [];
+
+    document.getElementById('legendarus-power').value = Math.round(MAX_POWER * Math.random());
+    for (var i = 0; i < COUNT_GLADIATORS; i++) {
+      gladiators[i].firstElementChild.innerHTML = buildGladiatorName();
+      gladiatorsPower[i] = document.getElementsByName('power' + (i + 1))[0];
+      gladiatorsWeapon[i] = document.getElementsByName('weapon' + (i + 1))[0];
+      gladiatorsPower[i].value = Math.round(MAX_POWER * Math.random());
+      gladiatorsWeapon[i].value = Math.round(MAX_WEAPON * Math.random());
+    }
+
+    document.getElementById('start').onclick = function() {
+      var power;
+      var weapon;
+      var legendarusPower = Number(document.getElementById('legendarus-power').value);
+      var victory = true;
+
+      for (var i = 0; i < COUNT_GLADIATORS; i++) {
+        power = Number(gladiatorsPower[i].value);
+        weapon = Number(gladiatorsWeapon[i].value);
+        if (legendarusPower < power) {
+          victory = false;
+          document.getElementById('result').innerHTML =
+            'Легендаруса победил в ' + (i + 1) + ' бою гладиатор '
+            + gladiators[i].firstElementChild.innerHTML + '!';
+          break;
+        }
+        else if (legendarusPower > power) {
+          legendarusPower += weapon;
+        }
+      }
+
+      if (victory) {
+        document.getElementById('result').innerHTML = 'Легендарус победил всех!'
+      }
+    }
+  }
+
+  function buildGladiatorName() {
+    var consonants = 'йцкнгшщзхфвпрлджчсмтб';
+    var vowels = 'уеёыаоэяию';
+    var nameLength = (Math.round(2 * Math.random()) + 1);
+    var name = consonants[Math.floor(consonants.length * Math.random())];
+
+    name = name.toLocaleUpperCase();
+    for (var i = 0; i < nameLength; i++) {
+      name += vowels[Math.floor(vowels.length * Math.random())];
+      name += consonants[Math.floor(consonants.length * Math.random())];
+    }
+    name += 'ус';
+
+    return name;
+  }
+</script>
+</body>
+</html>

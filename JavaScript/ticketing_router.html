@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Билетный маршрутизатор</title>
+  </head>
+  <body>
+    <label for="initial-tickets"><b>У вас есть билеты:</b></label>
+    <div id="initial-tickets"></div>
+    <label for="final-tickets"><b>Из них можно составить маршрут:</b></label>
+    <div id="final-tickets"></div>
+
+    <script type="text/javascript">
+    /***********************************
+    Пользователь купил себе мешок билетов для интересного отпуска.
+    Но вот беда, он забыл, все ли билеты взяты и в какой последовательности
+    ему надо куда лететь. Пусть один билет - это структура вида:
+    {
+    id: '1AUS93', // случайная последовательность символов - id билета
+    fromCity: 'Москва',
+    toCity: 'Багдад'
+    }
+    а набор билетов путешественника - это массив билетов подобного вида,
+    НЕ упорядоченный (пользователь перепутал порядок билетов и теперь они идут вразнобой)
+    Напишите программу, которая по исходным данным определяет,
+    является ли набор билетов непрерывным маршрутом,
+    и выводит горе-путешественнику его итоговый маршрут -
+    последовательность городов, которые он посетит.
+    Будет правильно, если вы сформируете УПОРЯДОЧЕННЫЙ массив из билетов.
+    Важное уточнение - все билеты перепутаны, идут не по порядку -
+    единственная зацепка - путешественник точно едет из точки А и точку В и это РАЗНЫЕ города.
+    ***********************************/
+      var arrCities = [
+        'Кулим'    , 'Бузулук', 'Тетово'      , 'Каменск-Уральский', 'Минна'    ,
+        'Ясудж'    , 'Москва' , 'Багдад'      , 'Уэртинг'          , 'Томс-Ривер',
+        'Даска'    , 'Лохэ'   , 'Борисоглебск', 'Рок-Хилл'         , 'Ширпер'
+      ];
+
+      main();
+
+      function main() {
+        var COUNT_TICKETS = 10;
+        var tickets = getTickets(COUNT_TICKETS);
+        var route = buildRoute(tickets);
+        var initString = '';
+        var finalString = '';
+
+        for (var i = 0; i < COUNT_TICKETS; i++) {
+            initString += '<p>' + (i + 1) + '. #' + tickets[i].ticketID + ': '
+                        + tickets[i].firstCity + ' - ' + tickets[i].secondCity + '</p>';
+        }
+        document.getElementById('initial-tickets').innerHTML = initString;
+
+        for (var i = 0; i < route.length; i++) {
+            finalString += '<p>' + (i + 1) + '. #' + route[i].ticketID + ': '
+                        + route[i].firstCity + ' - ' + route[i].secondCity + '</p>';
+        }
+        document.getElementById('final-tickets').innerHTML = finalString;
+      }
+
+      function getTickets(countTickets) {
+        var firstCities = [].concat(arrCities);
+        var secondCities = [].concat(arrCities);
+        var arrTickets = [];
+
+        for (var i = 0; i < countTickets; i++) {
+          var ticket = new Object();
+          var firstCityIndex = Math.floor(Math.random() * firstCities.length);
+          var secondCityIndex = Math.floor(Math.random() * secondCities.length);
+          var secondCity = secondCities[secondCityIndex];
+
+          ticket.ticketID = randomString(6);
+          ticket.firstCity = firstCities.splice(firstCityIndex, 1)[0];
+          while (secondCity === ticket.firstCity) {
+            secondCityIndex = Math.floor(Math.random() * secondCities.length);
+            secondCity = secondCities[secondCityIndex];
+          }
+          ticket.secondCity = secondCities.splice(secondCityIndex, 1)[0];
+
+          arrTickets[i] = ticket;
+        }
+
+        return arrTickets;
+      }
+
+      function buildRoute(inpTickets) {
+        var routes = []; // массив маршрутов
+        var maxRoute = 1;
+        var bestRouteIndex = 0;
+
+        for (var i = 0; i < inpTickets.length; i++) {
+          var routeTickets = []; // массив билетов для одного маршрута
+          var index = 0;
+
+          routeTickets[0] = inpTickets[i];
+          for (var j = 0; j < inpTickets.length; j++) {
+            if (i !== j) {
+              if (routeTickets[index].secondCity === inpTickets[j].firstCity) {
+                routeTickets.push(inpTickets[j]);
+                index++;
+              }
+              else if (routeTickets[0].firstCity === inpTickets[j].secondCity) {
+                routeTickets.unshift(inpTickets[j]);
+                index++;
+              }
+            }
+          }
+          if (maxRoute < (index + 1)) {
+            maxRoute = index + 1;
+            bestRouteIndex = i;
+          }
+          routes[i] = routeTickets;
+        }
+
+        return routes[bestRouteIndex];
+      }
+
+      function randomString(countChars) {
+        var charString = '0123456789QWERTYUIOPASDFGHJKLZXCVBNM';
+        var outString = '';
+
+        for (var i = 0; i < countChars; i++) {
+          outString = outString.concat(charString[Math.floor(Math.random() * charString.length)]);
+        }
+
+        return outString;
+      }
+
+    </script>
+  </body>
+</html>

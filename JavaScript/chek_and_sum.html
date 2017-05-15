@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Проверка числа и сумма 10 чисел</title>
+  </head>
+  <body>
+    <label for="number">Введите целое число</label>
+    <input id="number">
+    <button id="button-number">Отправить</button>
+    <p id="simple"></p>
+    <p id="fibonacci"></p>
+
+    <label>Введите любые числа</label><br>
+    <input id="item1"><br>
+    <input id="item2"><br>
+    <input id="item3"><br>
+    <input id="item4"><br>
+    <input id="item5"><br>
+    <input id="item6"><br>
+    <input id="item7"><br>
+    <input id="item8"><br>
+    <input id="item9"><br>
+    <input id="item10"><br>
+    <button id="button-sum">Сложить</button>
+    <p id="sum"></p>
+
+    <script type="text/javascript">
+
+    /****************************************
+    Получите от пользователя число.
+    1) Определите, является ли число "простым"
+    2) Определите, является ли число числом Фибонначи
+    ******************************************/
+      document.getElementById('button-number').onclick = function () {
+        var userInput = document.getElementById('number').value;
+        var simpleString = '';
+        var fibonacciString = '';
+        if (userInput && isFinite(userInput)) {
+          userInput = Number(userInput);
+          if (Number.isInteger(userInput)) {
+            // проверка на простое число
+            var divider = 2;
+            while (userInput % divider) {
+              divider++;
+            }
+            var isSimple = (divider === userInput) ? '' : 'не ';
+            simpleString = 'Это ' + isSimple + 'простое число';
+
+            // проверка на число Фибоначчи
+            var previousNumber = 0;
+            var currentNumber = 1;
+            var fibonacci = 1;
+            while (fibonacci < userInput) {
+              fibonacci = previousNumber + currentNumber;
+              previousNumber = currentNumber;
+              currentNumber = fibonacci;
+            }
+            var isFibonacci = (fibonacci === userInput) ? '' : 'не ';
+            fibonacciString = 'Это ' + isFibonacci + 'число Фибоначчи';
+          }
+          else {
+            simpleString = 'Это не целое число';
+          }
+        }
+        else {
+          simpleString = 'Это не число';
+        }
+
+        document.getElementById('simple').innerHTML = simpleString;
+        document.getElementById('fibonacci').innerHTML = fibonacciString;
+      }
+
+      /***************************************
+      Расположите на странице 10 текстовых полей ввода.
+      Запрещено использовать массивы и объекты в переменных.
+      По клике на кнопке просуммируйте значения в полях ввода и выведите их на страницу.
+      ***************************************/
+      document.getElementById('button-sum').onclick = function () {
+        var sum = 0;
+        for (i = 1; i <= 10; i++) {
+          var index = 'item' + i;
+          var userInput = document.getElementById(index).value;
+          if (userInput && isFinite(userInput)) {
+            sum += Number(userInput);
+          }
+        }
+        document.getElementById('sum').innerHTML = sum;
+      }
+
+    </script>
+  </body>
+</html>

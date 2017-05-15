@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Опечаточник</title>
+  </head>
+  <body>
+    <label for="input-array">Введите массив запросов через запятую</label>
+    <input type="text" id="input-array">
+    <button id="button">Далее</button>
+    <br><br>
+    <label for="string-result">Верный запрос</label>
+    <p id="string-result"></p>
+
+    <script type="text/javascript">
+    /************************************
+    Пользователи поисковых систем нередко допускают ошибки
+    при вводе поискового запроса. Такие ошибки часто можно поправить,
+    не делая дополнительных лингвистический анализов и сложных запросов к БД.
+    Давайте предположим, что мы получили массив вариантов
+    поискового запроса от БД в виде
+    ['молоко', 'малоко', 'молако', 'модоко']
+    Найдите первое слово, отличающееся от остальных не более,
+    чем на одну букву - это и будет "правильный" запрос.
+    Достаточно одного, первого слова. Для примера результат - молоко.
+    Если каждое слово отличается от других более, чем на 1 символ,
+    значит результатом станет null.
+    Также null выводим если слова в исходном массиве разной длины.
+    Еще для самопроверки:
+    исходные данные - ожидаемый результат
+    [] -> null
+    ['опечаточка'] -> null
+    ['картина', 'кадтина'] -> картина
+    ['картина', 'картинка'] -> null
+    ['привет', 'превед'] -> null
+    ************************************/
+      document.getElementById('button').onclick = function () {
+        var inputString = document.getElementById('input-array').value;
+        var resultString = typoFilter(inputString);
+
+        if (!resultString) {
+        	resultString = 'не найден';
+        }
+        document.getElementById('string-result').innerHTML = resultString;
+      }
+
+      function typoFilter(inputString) {
+        var inputArray = inputString.split(',');
+
+        for (i = 0; i < inputArray.length; i++) {
+          var item = inputArray[i].trim();
+
+          for (j = 0; j < inputArray.length; j++) {
+            if (j !== i) {
+              var compareItem = inputArray[j].trim();
+              var diff = 0;
+              var result;
+
+              if (item.length !== compareItem.length) {
+                return null;
+              }
+
+              for (k = 0; k < item.length; k++) {
+              	if (item[k] !== compareItem[k]) {
+              		diff++;
+              	}
+              }
+
+              if (diff > 1) {
+              	result = null;
+              	break;
+              }
+              else {
+              	result = item;
+              }
+            }
+          }
+
+          if (result) {
+          	break;
+          }
+        }
+        return result;
+      }
+
+    </script>
+  </body>
+</html>
